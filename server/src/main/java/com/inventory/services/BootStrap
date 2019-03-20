@@ -1,0 +1,59 @@
+package com.inventory.services;
+
+import com.inventory.model.Server;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCursor;
+import com.oracle.javafx.jmx.json.JSONException;
+import com.inventory.model.Server;
+
+public class BootStrap {
+
+
+
+    public Server server = new Server();
+    public String bootStrapDB(String name) throws JSONException {
+
+        int id;
+        int instanceId;
+        int deviceId;
+
+        BasicDBObject obj = new BasicDBObject().append("id", 1);
+        obj.append("uri",1);
+        obj.append("time",1);
+
+        BasicDBObject queryObj = new BasicDBObject().append("name", name);
+        DBCursor queryResult = server.bootstrap.find(queryObj, obj);
+
+        BasicDBObject fields = (BasicDBObject) queryResult.next();
+
+        server.setId(fields.getString("id"));
+        server.setUri(fields.getString("uri"));
+        server.setLifetime(fields.getString("time"));
+
+        id=1;
+        instanceId=1;
+        deviceId=0;
+        String firstItem="/"+id+"/"+instanceId+"/"+deviceId;
+        String firstFields=server.getUri();
+
+        id=1;
+        instanceId=1;
+        deviceId=1;
+        String secondItem="/"+id+"/"+instanceId+"/"+deviceId;
+        String secondFields=server.getUri();
+
+        JSONArray jasonArr = new JSONArray();
+        jasonArr.put(new JSONObject()
+                .put("devices", firstItem)
+                .put("allFields",firstFields));
+
+
+        jasonArr.put(new JSONObject()
+                .put("devices", secondItem)
+                .put("allFields",secondFields));
+
+        return jasonArr.toString();
+
+    }
+
+}
