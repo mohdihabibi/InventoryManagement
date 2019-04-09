@@ -1,11 +1,9 @@
 package com.inventory.services;
-
-import com.inventory.controller.HomeController;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
+import com.inventory.controller.ItemController;
 import com.mongodb.BasicDBObject;
 
 public class RegisterDevice {
@@ -23,7 +21,7 @@ public class RegisterDevice {
         ArrayList<Integer> arr = new ArrayList<Integer>(sizeOfArray);
         for (int i = 1; i <= sizeOfArray; i++) { arr.add(i); }
         Random random = new Random();
-        int id = random.nextInt(list.size());
+        int id = random.nextInt(arr.size());
         String rID = Integer.toString(id);
         BasicDBObject doc = new BasicDBObject();
         doc.put("Name",name);
@@ -31,7 +29,7 @@ public class RegisterDevice {
         doc.put("time",time);
         doc.put("date",new Date());
 
-        HomeController.registerInfo.insert(doc);
+        ItemController.registerationDb.insert(doc);
 
         return rID;
     }

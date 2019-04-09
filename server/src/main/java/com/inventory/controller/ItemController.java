@@ -4,31 +4,35 @@ import com.inventory.model.Item;
 import com.inventory.repository.repository;
 import com.inventory.services.BootStrap;
 import com.inventory.services.RegisterDevice;
+import com.mongodb.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.net.UnknownHostException;
-import java.util.Date;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoException;
 
 @RestController
 @RequestMapping("api/machine/")
 public class ItemController {
 
-    MongoClient client = new MongoClient("localhost", 27017);
+    public static MongoClient mongoClient = null;
+    public static DB database;
+    public static DBCollection bootStrapDb;
+    public static DBCollection registerationDb;
+    public static DBCollection serverInfo;
 
-    DB database = client.getDB("cmpe273");
+    public static void dbConnection() throws UnknownHostException {
 
-    public DBCollection bootstrap = database.getCollection("bootstrap");
-    public DBCollection registerInfo = database.getCollection("registerInfo");
-    public DBCollection serverDb = database.getCollection("server");
+        String uriStr = "mongodb://cmpe273";
+        MongoClientURI clientURI = new MongoClientURI(uriStr);
+        MongoClient mongoClient = new MongoClient(clientURI);
+        DB db = mongoClient.getDB(clientURI.getDatabase());
+        bootStrapDb = db.getCollection("bootStrapDb");
+        registerationDb = db.getCollection("registerationDb");
+        serverInfo = db.getCollection("serverInfo");
+
+    }
 
     @Autowired
     private repository Repository;
